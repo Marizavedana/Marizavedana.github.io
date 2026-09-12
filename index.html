@@ -247,6 +247,141 @@
             color: #d4a574;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .carousel-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .carousel-button {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .carousel-button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .carousel-counter {
+            color: white;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+            z-index: 2001;
+        }
+
+        .close-modal:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel-info {
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .carousel-info h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .carousel-info p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
         @media (max-width: 768px) {
             nav ul {
                 gap: 20px;
@@ -266,6 +401,24 @@
 
             .hero {
                 height: 50vh;
+            }
+
+            .carousel-controls {
+                bottom: 10px;
+                gap: 10px;
+            }
+
+            .carousel-button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .close-modal {
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 24px;
             }
         }
     </style>
@@ -296,7 +449,7 @@
         <div class="container">
             <h2 class="section-title">Featured Works</h2>
             <div class="portfolio-grid">
-                <div class="portfolio-item">
+                <div class="portfolio-item" onclick="openCarousel(0)">
                     <div class="portfolio-image">
                         <img src="images/portfolio/espiral-1.jpeg" alt="Espiral">
                     </div>
@@ -383,5 +536,100 @@
             <p>Mosaic Artist | Brazil</p>
         </div>
     </footer>
+
+    <!-- Carousel Modal -->
+    <div id="carouselModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCarousel()">&times;</span>
+            <div class="carousel-container">
+                <img id="carouselImage" class="carousel-image" src="" alt="Artwork">
+                <div class="carousel-controls">
+                    <button class="carousel-button" onclick="previousImage()">← Prev</button>
+                    <span class="carousel-counter"><span id="currentSlide">1</span> / <span id="totalSlides">2</span></span>
+                    <button class="carousel-button" onclick="nextImage()">Next →</button>
+                </div>
+            </div>
+            <div class="carousel-info">
+                <h3 id="carouselTitle">Espiral</h3>
+                <p id="carouselDescription">A dynamic spiral mosaic exploring movement and flow through color and form</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carousel data - Add your artwork images here
+        const artworks = [
+            {
+                id: 0,
+                title: "Espiral",
+                description: "A dynamic spiral mosaic exploring movement and flow through color and form",
+                images: [
+                    "images/portfolio/espiral-1.jpeg",
+                    "images/portfolio/espiral-2.jpeg"
+                ]
+            }
+            // Add more artworks here as you expand your portfolio
+        ];
+
+        let currentArtwork = 0;
+        let currentImageIndex = 0;
+
+        function openCarousel(artworkIndex) {
+            currentArtwork = artworkIndex;
+            currentImageIndex = 0;
+            updateCarousel();
+            document.getElementById('carouselModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCarousel() {
+            document.getElementById('carouselModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextImage() {
+            const images = artworks[currentArtwork].images;
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            updateCarousel();
+        }
+
+        function previousImage() {
+            const images = artworks[currentArtwork].images;
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const artwork = artworks[currentArtwork];
+            const image = artwork.images[currentImageIndex];
+            
+            document.getElementById('carouselImage').src = image;
+            document.getElementById('carouselTitle').textContent = artwork.title;
+            document.getElementById('carouselDescription').textContent = artwork.description;
+            document.getElementById('currentSlide').textContent = currentImageIndex + 1;
+            document.getElementById('totalSlides').textContent = artwork.images.length;
+        }
+
+        // Close modal when clicking outside the content
+        document.getElementById('carouselModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeCarousel();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('carouselModal');
+            if (modal.classList.contains('active')) {
+                if (event.key === 'ArrowRight') {
+                    nextImage();
+                } else if (event.key === 'ArrowLeft') {
+                    previousImage();
+                } else if (event.key === 'Escape') {
+                    closeCarousel();
+                }
+            }
+        });
+    </script>
 </body>
 </html>
