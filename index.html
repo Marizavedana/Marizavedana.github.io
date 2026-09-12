@@ -171,6 +171,8 @@
             color: #999;
             font-size: 12px;
             font-style: italic;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
         .about-section {
@@ -381,7 +383,7 @@
         .carousel-meta {
             font-size: 12px;
             color: #999;
-            font-style: italic;
+            line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -526,7 +528,9 @@
             return {
                 title: lines[0] || 'Obra de Arte',
                 year: lines[1] || '',
-                size: lines[2] || ''
+                size: lines[2] || '',
+                type: lines[3] || '',
+                materials: lines[4] || ''
             };
         }
 
@@ -586,12 +590,14 @@
                     // Sort images by number
                     data.images.sort((a, b) => a.number - b.number);
 
-                    const metadata = data.metadata || { title: formatTitle(name), year: '', size: '' };
+                    const metadata = data.metadata || { title: formatTitle(name), year: '', size: '', type: '', materials: '' };
 
                     return {
                         title: metadata.title,
                         year: metadata.year,
                         size: metadata.size,
+                        type: metadata.type,
+                        materials: metadata.materials,
                         images: data.images.map(img => `images/portfolio/${img.filename}`)
                     };
                 });
@@ -616,6 +622,16 @@
                 .join(' ');
         }
 
+        // Format metadata for display
+        function formatMetadata(artwork) {
+            const parts = [];
+            if (artwork.year) parts.push(artwork.year);
+            if (artwork.size) parts.push(artwork.size);
+            if (artwork.type) parts.push(artwork.type);
+            if (artwork.materials) parts.push(artwork.materials);
+            return parts.join('<br>');
+        }
+
         // Render portfolio grid
         function renderPortfolio() {
             const grid = document.getElementById('portfolioGrid');
@@ -626,8 +642,8 @@
                 item.className = 'portfolio-item';
                 item.onclick = () => openCarousel(index);
 
-                const metaHTML = artwork.year || artwork.size 
-                    ? `<div class="portfolio-meta">${artwork.year}${artwork.year && artwork.size ? ' • ' : ''}${artwork.size}</div>`
+                const metaHTML = formatMetadata(artwork)
+                    ? `<div class="portfolio-meta">${formatMetadata(artwork)}</div>`
                     : '';
 
                 item.innerHTML = `
@@ -681,8 +697,7 @@
             
             document.getElementById('carouselImage').src = image;
             document.getElementById('carouselTitle').textContent = artwork.title;
-            document.getElementById('carouselMeta').textContent = 
-                `${artwork.year}${artwork.year && artwork.size ? ' • ' : ''}${artwork.size}`;
+            document.getElementById('carouselMeta').innerHTML = formatMetadata(artwork);
             document.getElementById('currentSlide').textContent = currentImageIndex + 1;
             document.getElementById('totalSlides').textContent = artwork.images.length;
         }
