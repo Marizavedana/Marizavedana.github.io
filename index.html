@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mariza Vedana - Mosaic Artist</title>
+    <title>Mariza Vedana - Artista de Mosaicos</title>
     <style>
         * {
             margin: 0;
@@ -165,12 +165,6 @@
             color: #2c3e50;
             margin-bottom: 10px;
             font-size: 18px;
-        }
-
-        .portfolio-info p {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 8px;
         }
 
         .portfolio-meta {
@@ -384,12 +378,6 @@
             margin-bottom: 10px;
         }
 
-        .carousel-info p {
-            font-size: 14px;
-            color: #ccc;
-            margin-bottom: 8px;
-        }
-
         .carousel-meta {
             font-size: 12px;
             color: #999;
@@ -443,9 +431,9 @@
             <nav>
                 <div class="logo">MARIZA VEDANA</div>
                 <ul>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#portfolio">Portfólio</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#contact">Contato</a></li>
                 </ul>
             </nav>
         </div>
@@ -453,15 +441,15 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1>Mosaic Artist</h1>
-            <p>Transforming color and texture into captivating artistic expressions</p>
-            <a href="#portfolio" class="cta-button">Explore My Work</a>
+            <h1>Artista de Mosaicos</h1>
+            <p>Transformando cor e textura em expressões artísticas cativantes</p>
+            <a href="#portfolio" class="cta-button">Explore Meu Trabalho</a>
         </div>
     </section>
 
     <section id="portfolio" class="portfolio-section">
         <div class="container">
-            <h2 class="section-title">Featured Works</h2>
+            <h2 class="section-title">Obras em Destaque</h2>
             <div class="portfolio-grid" id="portfolioGrid">
                 <!-- Portfolio items will be dynamically generated here -->
             </div>
@@ -473,15 +461,15 @@
             <div class="about-content">
                 <div class="about-image">👩‍🎨</div>
                 <div class="about-text">
-                    <h2>About Me</h2>
+                    <h2>Sobre Mim</h2>
                     <p>
-                        I am a mosaic artist dedicated to creating vibrant, textured works that celebrate color, form, and artistic expression. With a passion for traditional techniques combined with contemporary design sensibilities, each piece tells a unique story.
+                        Sou uma artista de mosaicos dedicada a criar obras vibrantes e texturizadas que celebram cor, forma e expressão artística. Com paixão pelas técnicas tradicionais combinadas com sensibilidades contemporâneas, cada peça conta uma história única.
                     </p>
                     <p>
-                        My work draws inspiration from nature, cultural heritage, and the interplay of light and shadow. Whether creating intimate installations or large-scale commissions, I believe in the transformative power of mosaic art.
+                        Meu trabalho se inspira na natureza, patrimônio cultural e na interação entre luz e sombra. Seja criando instalações íntimas ou grandes encomendas, acredito no poder transformador da arte em mosaico.
                     </p>
                     <p>
-                        Based in Brazil, I continue to explore new possibilities in mosaic art while honoring the rich traditions of this ancient craft.
+                        Baseada no Brasil, continuo explorando novas possibilidades na arte de mosaicos enquanto honro as ricas tradições dessa antiga forma de arte.
                     </p>
                 </div>
             </div>
@@ -490,9 +478,9 @@
 
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2 class="section-title">Get in Touch</h2>
-            <p>Interested in commissions, collaborations, or just want to chat about mosaic art?</p>
-            <a href="mailto:contact@example.com" class="cta-button">Send me an email</a>
+            <h2 class="section-title">Entre em Contato</h2>
+            <p>Interessado em encomendas, colaborações ou quer conversar sobre mosaicos?</p>
+            <a href="mailto:contact@example.com" class="cta-button">Envie um e-mail</a>
             <div class="social-links" style="margin-top: 40px;">
                 <a href="#">Instagram</a>
                 <a href="#">Facebook</a>
@@ -503,8 +491,8 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 Mariza Vedana. All rights reserved.</p>
-            <p>Mosaic Artist | Brazil</p>
+            <p>&copy; 2026 Mariza Vedana. Todos os direitos reservados.</p>
+            <p>Artista de Mosaicos | Brasil</p>
         </div>
     </footer>
 
@@ -513,16 +501,15 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeCarousel()">&times;</span>
             <div class="carousel-container">
-                <img id="carouselImage" class="carousel-image" src="" alt="Artwork">
+                <img id="carouselImage" class="carousel-image" src="" alt="Obra de Arte">
                 <div class="carousel-controls">
-                    <button class="carousel-button" onclick="previousImage()">← Prev</button>
+                    <button class="carousel-button" onclick="previousImage()">← Anterior</button>
                     <span class="carousel-counter"><span id="currentSlide">1</span> / <span id="totalSlides">2</span></span>
-                    <button class="carousel-button" onclick="nextImage()">Next →</button>
+                    <button class="carousel-button" onclick="nextImage()">Próxima →</button>
                 </div>
             </div>
             <div class="carousel-info">
-                <h3 id="carouselTitle">Artwork</h3>
-                <p id="carouselDescription">A beautiful mosaic artwork</p>
+                <h3 id="carouselTitle">Obra de Arte</h3>
                 <div class="carousel-meta" id="carouselMeta"></div>
             </div>
         </div>
@@ -537,9 +524,9 @@
         async function parseMetadata(text) {
             const lines = text.trim().split('\n').filter(line => line.trim());
             return {
-                title: lines[0] || 'Artwork',
-                year: lines[1] || 'Year Unknown',
-                size: lines[2] || 'Size Unknown'
+                title: lines[0] || 'Obra de Arte',
+                year: lines[1] || '',
+                size: lines[2] || ''
             };
         }
 
@@ -588,7 +575,7 @@
                             const metadataText = await metadataResponse.text();
                             artworkMap[artworkName].metadata = await parseMetadata(metadataText);
                         } catch (error) {
-                            console.error(`Error loading metadata for ${artworkName}:`, error);
+                            console.error(`Erro ao carregar metadados para ${artworkName}:`, error);
                             artworkMap[artworkName].metadata = null;
                         }
                     }
@@ -615,7 +602,7 @@
                 // Render portfolio items
                 renderPortfolio();
             } catch (error) {
-                console.error('Error loading artworks:', error);
+                console.error('Erro ao carregar obras:', error);
                 // Fallback if API fails
                 renderPortfolioFallback();
             }
@@ -660,7 +647,7 @@
         // Fallback rendering if API fails (empty state)
         function renderPortfolioFallback() {
             const grid = document.getElementById('portfolioGrid');
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No artworks loaded. Please check your images folder.</p>';
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">Nenhuma obra carregada. Por favor, verifique sua pasta de imagens.</p>';
         }
 
         function openCarousel(artworkIndex) {
