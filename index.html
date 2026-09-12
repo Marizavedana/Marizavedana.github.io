@@ -170,6 +170,13 @@
         .portfolio-info p {
             color: #888;
             font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-meta {
+            color: #999;
+            font-size: 12px;
+            font-style: italic;
         }
 
         .about-section {
@@ -380,6 +387,13 @@
         .carousel-info p {
             font-size: 14px;
             color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .carousel-meta {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
         }
 
         @media (max-width: 768px) {
@@ -509,6 +523,7 @@
             <div class="carousel-info">
                 <h3 id="carouselTitle">Artwork</h3>
                 <p id="carouselDescription">A beautiful mosaic artwork</p>
+                <div class="carousel-meta" id="carouselMeta"></div>
             </div>
         </div>
     </div>
@@ -517,6 +532,16 @@
         let artworks = [];
         let currentArtwork = 0;
         let currentImageIndex = 0;
+
+        // Parse metadata from text file
+        async function parseMetadata(text) {
+            const lines = text.trim().split('\n').filter(line => line.trim());
+            return {
+                title: lines[0] || 'Artwork',
+                year: lines[1] || 'Year Unknown',
+                size: lines[2] || 'Size Unknown'
+            };
+        }
 
         // Auto-detect and load artworks from images/portfolio/ folder
         async function loadArtworks() {
@@ -539,10 +564,13 @@
                             const imageNumber = parseInt(match[2]);
 
                             if (!artworkMap[artworkName]) {
-                                artworkMap[artworkName] = [];
+                                artworkMap[artworkName] = {
+                                    images: [],
+                                    metadata: null
+                                };
                             }
 
-                            artworkMap[artworkName].push({
+                            artworkMap[artworkName].images.push({
                                 number: imageNumber,
                                 filename: file.name,
                                 path: file.path
@@ -551,17 +579,38 @@
                     }
                 });
 
+                // Load metadata for each artwork
+                for (const artworkName in artworkMap) {
+                    const metadataFile = files.find(f => f.name === `${artworkName}.txt`);
+                    if (metadataFile) {
+                        try {
+                            const metadataResponse = await fetch(metadataFile.download_url);
+                            const metadataText = await metadataResponse.text();
+                            artworkMap[artworkName].metadata = await parseMetadata(metadataText);
+                        } catch (error) {
+                            console.error(`Error loading metadata for ${artworkName}:`, error);
+                            artworkMap[artworkName].metadata = null;
+                        }
+                    }
+                }
+
                 // Convert to artworks array with proper ordering
-                artworks = Object.entries(artworkMap).map(([name, images]) => {
+                artworks = Object.entries(artworkMap).map(([name, data]) => {
                     // Sort images by number
-                    images.sort((a, b) => a.number - b.number);
+                    data.images.sort((a, b) => a.number - b.number);
+
+                    const metadata = data.metadata || { title: formatTitle(name), year: '', size: '' };
 
                     return {
-                        title: formatTitle(name),
-                        description: `A beautiful mosaic artwork from the ${formatTitle(name)} collection`,
-                        images: images.map(img => `images/portfolio/${img.filename}`)
+                        title: metadata.title,
+                        year: metadata.year,
+                        size: metadata.size,
+                        images: data.images.map(img => `images/portfolio/${img.filename}`)
                     };
                 });
+
+                // Sort artworks by title
+                artworks.sort((a, b) => a.title.localeCompare(b.title));
 
                 // Render portfolio items
                 renderPortfolio();
@@ -590,13 +639,17 @@
                 item.className = 'portfolio-item';
                 item.onclick = () => openCarousel(index);
 
+                const metaHTML = artwork.year || artwork.size 
+                    ? `<div class="portfolio-meta">${artwork.year}${artwork.year && artwork.size ? ' • ' : ''}${artwork.size}</div>`
+                    : '';
+
                 item.innerHTML = `
                     <div class="portfolio-image">
                         <img src="${artwork.images[0]}" alt="${artwork.title}">
                     </div>
                     <div class="portfolio-info">
                         <h3>${artwork.title}</h3>
-                        <p>${artwork.description}</p>
+                        ${metaHTML}
                     </div>
                 `;
 
@@ -641,7 +694,8 @@
             
             document.getElementById('carouselImage').src = image;
             document.getElementById('carouselTitle').textContent = artwork.title;
-            document.getElementById('carouselDescription').textContent = artwork.description;
+            document.getElementById('carouselMeta').textContent = 
+                `${artwork.year}${artwork.year && artwork.size ? ' • ' : ''}${artwork.size}`;
             document.getElementById('currentSlide').textContent = currentImageIndex + 1;
             document.getElementById('totalSlides').textContent = artwork.images.length;
         }
